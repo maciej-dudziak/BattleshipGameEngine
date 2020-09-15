@@ -1,0 +1,263 @@
+#include "../battleshipGame.h"
+
+battleshipGame::battleshipGame()
+{
+    boardsize = DEFAULT_BOARD_SIZE;
+    gameboard = std::vector<bool>(boardsize*boardsize, false);
+    restrictedFields = std::vector<bool>(boardsize*boardsize, false);
+    hitsAndMisses = std::vector<char>(boardsize*boardsize, ' ');
+}
+
+battleshipGame::~battleshipGame()
+{
+}
+
+void battleshipGame::placeAllShips()
+{
+    std::vector<int> battleshipPlacing = placeShip(BATTLESHIP_LEN);
+    
+    std::vector<int> destroyerPlacing;
+    do {
+        destroyerPlacing = placeShip(DESTROYER_LEN);
+    } while(destroyerPlacing.size() == 0);
+    
+    std::vector<int> cruiserPlacing;
+    do {
+        cruiserPlacing = placeShip(CRUISER_LEN);
+    } while(cruiserPlacing.size() == 0);
+    
+    return;
+}
+
+bool battleshipGame::isShipHit(Coordinate coord)
+{
+    int gameboardIndex = convertToGameboardIndex(coord);
+    bool result = gameboard[gameboardIndex];
+    updateHitsAndMisses(gameboardIndex, result);
+    return result;
+}
+
+std::vector<int> battleshipGame::placeShip(int shipLen)
+{
+    Direction battleshipDirection = getDirection();
+    auto occupiedIndexes = std::vector<int>();
+    switch (battleshipDirection)
+    {
+        case Direction::Right:
+            occupiedIndexes = placeShipRightwards(shipLen);
+            break;
+    
+        case Direction::Down:
+            occupiedIndexes = placeShipDownwards(shipLen);
+            break;
+    }
+    return occupiedIndexes;
+}
+
+std::vector<int> battleshipGame::placeShipRightwards(const int shipLen)
+{
+    int rangeMax = DEFAULT_BOARD_SIZE * (DEFAULT_BOARD_SIZE - shipLen) - 1;
+    int shipCenter = randomEngine.getRandomInt(0, rangeMax);
+    int realGameboardIndex = getRealIndexWhenPlacingRightwards(shipCenter, shipLen);
+
+    if(!validateFieldsRightwards(realGameboardIndex, shipLen))
+    {
+        return std::vector<int>();
+    }
+    auto occupiedIndexes = setOccupationRightwards(realGameboardIndex, shipLen);
+    setRestrictedRightwards(realGameboardIndex, shipLen);
+    return occupiedIndexes;
+}
+
+std::vector<int> battleshipGame::placeShipDownwards(const int shipLen)
+{
+    int rangeMax = DEFAULT_BOARD_SIZE * (DEFAULT_BOARD_SIZE - shipLen) - 1;
+    int shipCenter = randomEngine.getRandomInt(0, rangeMax);
+
+    if(!validateFieldsDownwards(shipCenter, shipLen))
+    {
+        return std::vector<int>();
+    }
+    auto occupiedIndexes = setOccupationDownwards(shipCenter, shipLen);
+    setRestrictedDownwards(shipCenter, shipLen);
+    return occupiedIndexes;
+}
+
+Direction battleshipGame::getDirection()
+{
+    return randomEngine.getRandomInt(0,1) ? Direction::Right : Direction::Down;
+}
+
+const bool battleshipGame::isOccupied(int index)
+{
+    return gameboard[index];
+}
+
+const bool battleshipGame::isRestricted(int index)
+{
+    return restrictedFields[index];
+}
+
+int battleshipGame::getRealIndexWhenPlacingRightwards(int index, int shipLen)
+{
+    int rowNumber = 1 + (index / 5);
+    int realIndex = index + rowNumber * (shipLen - 1);
+    return realIndex;
+}
+
+bool const battleshipGame::validateFieldsRightwards(int startingIndex, int shipLen)
+{
+    for (int i = 0;  i < shipLen; i++)
+    {
+        if (isOccupied(startingIndex+i) || isRestricted(startingIndex+i))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool const battleshipGame::validateFieldsDownwards(int startingIndex, int shipLen)
+{
+    for (int i = 0; i < shipLen; i++)
+    {
+        int offset = i*boardsize;
+        if (isOccupied(startingIndex+offset) || isRestricted(startingIndex+offset))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+std::vector<int> battleshipGame::setOccupationRightwards(int start, int len)
+{
+    std::vector<int> occupiedIndexes = std::vector<int>(len);
+    for (int i = 0; i < len; i++)
+    {
+        gameboard[start+i] = true;
+        occupiedIndexes.push_back(start+i);
+    }
+    return occupiedIndexes;
+}
+
+std::vector<int> battleshipGame::setOccupationDownwards(int start, int len)
+{
+    std::vector<int> occupiedIndexes = std::vector<int>(len);
+    for (int i = 0; i < len; i++)
+    {
+        int offset = i*boardsize;
+        gameboard[start+offset] = true;
+        occupiedIndexes.push_back(start+i);
+    }
+    return occupiedIndexes;
+}
+
+void battleshipGame::setRestrictedRightwards(int start, int len)
+{
+    bool isLeftBorder = start%boardsize == 0;
+    bool isRightBorder = (start+len)%boardsize == 0;
+    bool isTopBorder = start/boardsize == 0;
+    bool isBottomBorder = start/boardsize == (boardsize-1);
+
+    if (!isLeftBorder)
+    {
+        restrictedFields[start-1] = true;
+    }
+    if (!isRightBorder)
+    {
+        restrictedFields[start+1] = true;
+    }
+    if (!isTopBorder)
+    {
+        for (int i = 0; i < len; i++)
+        {
+            restrictedFields[start-boardsize+i] = true;
+        }
+    }
+    if (!isBottomBorder)
+    {
+        for (int i = 0; i < len; i++)
+        {
+            restrictedFields[start+boardsize+i] = true;
+        }
+    }
+    if (!(isLeftBorder && isTopBorder))
+    {
+        restrictedFields[start-boardsize-1] = true;
+    }
+    if (!(isRightBorder && isTopBorder))
+    {
+        restrictedFields[start-boardsize+len] = true;
+    }
+    if (!(isLeftBorder && isBottomBorder))
+    {
+        restrictedFields[start+boardsize-1] = true;
+    }
+    if (!(isRightBorder && isBottomBorder))
+    {
+        restrictedFields[start+boardsize+len] = true;
+    }
+}
+
+void battleshipGame::setRestrictedDownwards(int start, int len)
+{
+    bool isLeftBorder = start%boardsize == 0;
+    bool isRightBorder = start%boardsize == (boardsize-1);
+    bool isTopBorder = start/boardsize == 0;
+    bool isBottomBorder = (start+len*boardsize) > 63;
+
+    if (!isLeftBorder)
+    {
+        for (int i = 0; i < len; i++)
+        {
+            int offset = i*boardsize - 1;
+            restrictedFields[start + offset] = true;
+        }
+    }
+    if (!isRightBorder)
+    {
+        for (int i = 0; i < len; i++)
+        {
+            int offset = i*boardsize + 1;
+            restrictedFields[start + offset] = true;
+        }
+    }
+    if (!isTopBorder)
+    {
+        restrictedFields[start-boardsize] = true;
+    }
+    if (!isBottomBorder)
+    {
+        int offset = boardsize*len;
+        restrictedFields[start+offset] = true;
+    }
+    if (!(isLeftBorder && isTopBorder))
+    {
+        restrictedFields[start-boardsize-1] = true;
+    }
+    if (!(isRightBorder && isTopBorder))
+    {
+        restrictedFields[start-boardsize+1] = true;
+    }
+    if (!(isLeftBorder && isBottomBorder))
+    {
+        int offset = len*boardsize - 1;
+        restrictedFields[start+offset] = true;
+    }
+    if (!(isRightBorder && isBottomBorder))
+    {
+        int offset = len*boardsize + 1;
+        restrictedFields[start+offset] = true;
+    }
+}
+
+int battleshipGame::convertToGameboardIndex(Coordinate coord)
+{
+    return (coord.getRow()-1)*boardsize + (coord.getColumn()-1);
+}
+
+void battleshipGame::updateHitsAndMisses(int index, bool isHit)
+{
+    hitsAndMisses[index] = isHit ? '0' : 'X';
+}
