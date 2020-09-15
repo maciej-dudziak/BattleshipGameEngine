@@ -26,18 +26,15 @@ SCENARIO("battleshipGameEngine::shoot(row, column) should target represented cel
     {
         WHEN("battleshipGameEngine::shoot() method is called with target row and column arguments")
         {
-            int targetRow = 1;
-            int targetCol = 1;
-            auto res = gameEngine.shoot(targetRow, targetCol);
+            auto res = gameEngine.shoot(1, 1);
             THEN("Information about miss is returned")
             {
                 REQUIRE_FALSE(res.getIsHit());
             }
             THEN("The number of ships left is returned and is equal to zero")
             {
-                /* int shipsCount = res.getShipsLeftCount();
-                REQUIRE(0 == shipsCount); */
-                FAIL();
+                int shipsCount = res.getShipsLeftCount();
+                REQUIRE(0 == shipsCount);
             }
             THEN("The empty ship placement array is returned")
             {

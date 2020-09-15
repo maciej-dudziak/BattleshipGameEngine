@@ -2,6 +2,7 @@
 #include <vector>
 #include "random.h"
 #include "Coordinate.h"
+#include "Ship.h"
 
 enum class Direction 
 {
@@ -21,6 +22,7 @@ class battleshipGame
         std::vector<bool> gameboard;
         std::vector<bool> restrictedFields;
         std::vector<char> hitsAndMisses;
+        std::vector<Ship> ships;
 
         RandomEngine randomEngine = RandomEngine();
 
@@ -31,6 +33,7 @@ class battleshipGame
         void placeAllShips();
         
         bool isShipHit(Coordinate targetCoord);
+        int const getShipCount() {return ships.size();}
         std::vector<bool> const getGameboard() {return gameboard;}
         std::vector<bool> const getRestrictedFields() {return restrictedFields;}
         std::vector<char> const getHitsAndMisses() {return hitsAndMisses;}
@@ -50,7 +53,9 @@ class battleshipGame
 
         void setRestrictedRightwards(int start, int len);
         void setRestrictedDownwards(int start, int len);
+        void updateGameStatus(int index, bool isHit);
         void updateHitsAndMisses(int index, bool isHit);
+        void updateShipCount(int index);
 
         Direction getDirection();
 

@@ -15,17 +15,20 @@ battleshipGame::~battleshipGame()
 void battleshipGame::placeAllShips()
 {
     std::vector<int> battleshipPlacing = placeShip(BATTLESHIP_LEN);
-    
+    ships.push_back(Ship(battleshipPlacing));
+
     std::vector<int> destroyerPlacing;
     do {
         destroyerPlacing = placeShip(DESTROYER_LEN);
     } while(destroyerPlacing.size() == 0);
-    
+    ships.push_back(Ship(destroyerPlacing));
+
     std::vector<int> cruiserPlacing;
     do {
         cruiserPlacing = placeShip(CRUISER_LEN);
     } while(cruiserPlacing.size() == 0);
-    
+    ships.push_back(Ship(cruiserPlacing));
+
     return;
 }
 
@@ -33,8 +36,18 @@ bool battleshipGame::isShipHit(Coordinate coord)
 {
     int gameboardIndex = convertToGameboardIndex(coord);
     bool result = gameboard[gameboardIndex];
-    updateHitsAndMisses(gameboardIndex, result);
+
+    updateGameStatus(gameboardIndex, result);
     return result;
+}
+
+void battleshipGame::updateGameStatus(int index, bool isHit)
+{
+    updateHitsAndMisses(index, isHit);
+    if(isHit)
+    {
+        updateShipCount(index);
+    }
 }
 
 std::vector<int> battleshipGame::placeShip(int shipLen)
@@ -260,4 +273,20 @@ int battleshipGame::convertToGameboardIndex(Coordinate coord)
 void battleshipGame::updateHitsAndMisses(int index, bool isHit)
 {
     hitsAndMisses[index] = isHit ? '0' : 'X';
+}
+
+void battleshipGame::updateShipCount(int index)
+{
+    for(auto i = begin(ships); i < end(ships); i++)
+    {
+        if(i->removeIfFound(index))
+        {
+            int noOfOccupiedFields = i->getNumberOfOccupiedFields();
+            if(noOfOccupiedFields == 0)
+            {
+                ships.erase(i);
+                break;
+            }
+        }
+    }
 }
