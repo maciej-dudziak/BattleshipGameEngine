@@ -1,4 +1,4 @@
-#include "../shootResultDTO.h"
+#include "../shootResultDTO.hpp"
 
 shootResultDTO::shootResultDTO(bool const _isHit, int const _shipsLeftCount,
         std::vector<bool> const _shipPlacingVector, std::vector<char> const _hitsAndMissesVector)

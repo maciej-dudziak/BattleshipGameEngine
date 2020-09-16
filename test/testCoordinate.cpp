@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "../src/Coordinate.h"
+#include "../src/Coordinate.hpp"
 
 SCENARIO("Building a Coordinate object")
 {

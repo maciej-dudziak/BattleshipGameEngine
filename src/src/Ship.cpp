@@ -1,4 +1,4 @@
-#include "../Ship.h"
+#include "../Ship.hpp"
 
 Ship::Ship(std::vector<int> _occupiedFields) : occupiedFields(_occupiedFields)
 {

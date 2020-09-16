@@ -1,8 +1,8 @@
 #pragma once
 #include <vector>
-#include "Coordinate.h"
-#include "shootResultDTO.h"
-#include "battleshipGame.h"
+#include "Coordinate.hpp"
+#include "shootResultDTO.hpp"
+#include "battleshipGame.hpp"
 
 class battleshipGameEngine
 {

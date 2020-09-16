@@ -1,4 +1,4 @@
-#include "../Coordinate.h"
+#include "../Coordinate.hpp"
 
 Coordinate::Coordinate(int _row, int _column) : row(_row), column(_column)
 {

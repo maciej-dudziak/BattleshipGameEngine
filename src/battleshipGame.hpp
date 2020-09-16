@@ -1,8 +1,8 @@
 #pragma once
 #include <vector>
-#include "random.h"
-#include "Coordinate.h"
-#include "Ship.h"
+#include "random.hpp"
+#include "Coordinate.hpp"
+#include "Ship.hpp"
 
 enum class Direction 
 {

@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "../src/random.h"
+#include "../src/random.hpp"
 
 SCENARIO("Random function returs a random number in specified range")
 {

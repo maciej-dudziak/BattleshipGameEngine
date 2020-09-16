@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "../src/battleshipGame.h"
+#include "../src/battleshipGame.hpp"
 
 SCENARIO("Default construction of the Battleship Game")
 {

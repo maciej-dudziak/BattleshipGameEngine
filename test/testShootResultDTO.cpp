@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "../src/shootResultDTO.h"
+#include "../src/shootResultDTO.hpp"
 
 SCENARIO("Building a shootResultDTO")
 {

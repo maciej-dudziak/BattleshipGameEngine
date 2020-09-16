@@ -1,4 +1,4 @@
-#include "../battleshipGame.h"
+#include "../battleshipGame.hpp"
 
 battleshipGame::battleshipGame()
 {

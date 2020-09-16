@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "../src/battleshipGameEngine.h"
+#include "../src/battleshipGameEngine.hpp"
 
 SCENARIO("battleshipGameEngine::startGame() should begin a 1-player game")
 {
