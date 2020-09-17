@@ -13,5 +13,6 @@ public:
     ~battleshipGameEngine();
 
     std::vector<bool> startGame();
+    std::vector<bool> startGame(int gameboardSize);
     shootResultDTO shoot(int row, int col);
 };

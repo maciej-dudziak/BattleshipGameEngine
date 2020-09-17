@@ -1,5 +1,6 @@
 #include "catch.hpp"
 #include "../src/battleshipGame.hpp"
+#include <algorithm>
 
 SCENARIO("Default construction of the Battleship Game")
 {
@@ -71,6 +72,54 @@ SCENARIO("Checking if the ship is hit")
                 Coordinate coord = Coordinate::builder().withRow(row).withColumn(col).build();
                 bool res = game.isShipHit(coord);
                 REQUIRE_FALSE(!res);
+            }
+        }
+    }
+}
+
+SCENARIO("Resizing a gameboard using the battleshipGame::resizeGameboard(int) method")
+{
+    GIVEN("The battleshipGame object is created")
+    {
+        battleshipGame game = battleshipGame();
+        WHEN("batttleshipGame::resizeGameboard(10) method is called - gameboard extended")
+        {
+            game.resizeGame(10);
+            auto gameboard = game.getGameboard();
+            auto restricted = game.getRestrictedFields();
+            auto hitsMisses = game.getHitsAndMisses();
+            THEN("Gameboard size is changed to 10x10")
+            {
+                REQUIRE(100 == gameboard.size());
+                REQUIRE(100 == restricted.size());
+                REQUIRE(100 == hitsMisses.size());
+            }
+            THEN("Correct initialisation is maintained")
+            {
+                auto firstTrue = std::find(begin(gameboard), end(gameboard), true);
+                auto firstNotSpaceChar = std::find_if_not(begin(hitsMisses), end(hitsMisses), [](char character) { return character == ' ';});
+                REQUIRE(end(gameboard) == firstTrue);
+                REQUIRE(end(hitsMisses) == firstNotSpaceChar);
+            }
+        }
+        WHEN("batttleshipGame::resizeGameboard(10) method is called - gameboard reduced")
+        {
+            game.resizeGame(6);
+            auto gameboard = game.getGameboard();
+            auto restricted = game.getRestrictedFields();
+            auto hitsMisses = game.getHitsAndMisses();
+            THEN("Gameboard size is changed to 6x6")
+            {
+                REQUIRE(36 == gameboard.size());
+                REQUIRE(36 == restricted.size());
+                REQUIRE(36 == hitsMisses.size());
+            }
+            THEN("Correct initialisation is maintained")
+            {
+                auto firstTrue = std::find(begin(gameboard), end(gameboard), true);
+                auto firstNotSpaceChar = std::find_if_not(begin(hitsMisses), end(hitsMisses), [](char character) { return character == ' ';});
+                REQUIRE(end(gameboard) == firstTrue);
+                REQUIRE(end(hitsMisses) == firstNotSpaceChar);
             }
         }
     }

@@ -12,6 +12,14 @@ battleshipGame::~battleshipGame()
 {
 }
 
+void battleshipGame::resizeGame(int newGameboardSize)
+{
+    boardsize = newGameboardSize;
+    gameboard.resize(newGameboardSize*newGameboardSize, false);
+    restrictedFields.resize(newGameboardSize*newGameboardSize, false);
+    hitsAndMisses.resize(newGameboardSize*newGameboardSize, ' ');
+}
+
 void battleshipGame::placeAllShips()
 {
     std::vector<int> battleshipPlacing = placeShip(BATTLESHIP_LEN);

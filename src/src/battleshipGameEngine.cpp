@@ -1,4 +1,4 @@
-#include "../battleshipGameEngine.h"
+#include "../battleshipGameEngine.hpp"
 
 battleshipGameEngine::battleshipGameEngine()
 {
@@ -12,6 +12,12 @@ std::vector<bool> battleshipGameEngine::startGame()
 {
     game.placeAllShips();
     return game.getGameboard();
+}
+
+std::vector<bool> battleshipGameEngine::startGame(int newGameboardSize)
+{
+    game.resizeGame(newGameboardSize);
+    return startGame();
 }
 
 shootResultDTO battleshipGameEngine::shoot(int const row, int const column)
