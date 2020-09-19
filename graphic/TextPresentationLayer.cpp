@@ -34,7 +34,7 @@ std::string TextPresentationLayer::getTextPresentation(std::vector<char> inputDa
         output.append("\n").append(std::to_string(i+1));
         for(int j = 0; j < gameboardLen; j++)
         {
-            output.append(1, inputData.at(i*gameboardLen + j)).append("&");
+            output.append(1, inputData.at(i*gameboardLen + j)).append(" ");
         }
     }
     return output;
