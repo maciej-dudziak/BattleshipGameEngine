@@ -79,10 +79,10 @@ Coordinate TextPresentationController::parseShootInput(std::string userInput)
     auto delimiter = std::find(begin(userInput), end(userInput), ' ');
     auto delimiterIndex = std::distance(begin(userInput), delimiter);
 
-    std::string rowValue = userInput.substr(0,delimiterIndex--);
+    std::string rowValue = userInput.substr(0,delimiterIndex);
     int row = std::stoi(rowValue);
 
-    std::string columnValue = userInput.substr(delimiterIndex++, std::string::npos);
+    std::string columnValue = userInput.substr(delimiterIndex+1, std::string::npos);
     int column = std::stoi(columnValue);
 
     return Coordinate::builder().withRow(row).withColumn(column).build();

@@ -5,13 +5,14 @@ int main()
 {
     TextPresentationController controller = TextPresentationController();
     std::cout << controller.getWelcomeMessage();
-    bool isGameStarted = controller.promptUserToStartAGame();
-    if(isGameStarted)
+    bool startGame = controller.promptUserToStartAGame();
+    while(startGame)
     {
         while(!controller.promptUserToShoot())
         {
         }
-        std::cout << controller.getCongratulationsMessage();
+        std::cout << std::endl << controller.getCongratulationsMessage();
+        startGame = controller.promptUserToStartAGame();
     }
     return 0;
 }

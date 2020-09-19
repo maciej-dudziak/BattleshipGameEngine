@@ -77,7 +77,7 @@ std::vector<int> battleshipGame::placeShip(int shipLen)
 
 std::vector<int> battleshipGame::placeShipRightwards(const int shipLen)
 {
-    int rangeMax = DEFAULT_BOARD_SIZE * (DEFAULT_BOARD_SIZE - shipLen) - 1;
+    int rangeMax = boardsize * (boardsize - shipLen + 1) - 1;
     int shipCenter = randomEngine.getRandomInt(0, rangeMax);
     int realGameboardIndex = getRealIndexWhenPlacingRightwards(shipCenter, shipLen);
 
@@ -92,7 +92,7 @@ std::vector<int> battleshipGame::placeShipRightwards(const int shipLen)
 
 std::vector<int> battleshipGame::placeShipDownwards(const int shipLen)
 {
-    int rangeMax = DEFAULT_BOARD_SIZE * (DEFAULT_BOARD_SIZE - shipLen) - 1;
+    int rangeMax = (boardsize * (boardsize - shipLen + 1)) - 1;
     int shipCenter = randomEngine.getRandomInt(0, rangeMax);
 
     if(!validateFieldsDownwards(shipCenter, shipLen))
@@ -111,17 +111,17 @@ Direction battleshipGame::getDirection()
 
 const bool battleshipGame::isOccupied(int index)
 {
-    return gameboard[index];
+    return gameboard.at(index);
 }
 
 const bool battleshipGame::isRestricted(int index)
 {
-    return restrictedFields[index];
+    return restrictedFields.at(index);
 }
 
 int battleshipGame::getRealIndexWhenPlacingRightwards(int index, int shipLen)
 {
-    int rowNumber = 1 + (index / 5);
+    int rowNumber = index / (boardsize - shipLen + 1);
     int realIndex = index + rowNumber * (shipLen - 1);
     return realIndex;
 }
@@ -153,10 +153,10 @@ bool const battleshipGame::validateFieldsDownwards(int startingIndex, int shipLe
 
 std::vector<int> battleshipGame::setOccupationRightwards(int start, int len)
 {
-    std::vector<int> occupiedIndexes = std::vector<int>(len);
+    std::vector<int> occupiedIndexes = std::vector<int>();
     for (int i = 0; i < len; i++)
     {
-        gameboard[start+i] = true;
+        gameboard.at(start+i) = true;
         occupiedIndexes.push_back(start+i);
     }
     return occupiedIndexes;
@@ -164,12 +164,12 @@ std::vector<int> battleshipGame::setOccupationRightwards(int start, int len)
 
 std::vector<int> battleshipGame::setOccupationDownwards(int start, int len)
 {
-    std::vector<int> occupiedIndexes = std::vector<int>(len);
+    std::vector<int> occupiedIndexes = std::vector<int>();
     for (int i = 0; i < len; i++)
     {
         int offset = i*boardsize;
-        gameboard[start+offset] = true;
-        occupiedIndexes.push_back(start+i);
+        gameboard.at(start+offset) = true;
+        occupiedIndexes.push_back(start+offset);
     }
     return occupiedIndexes;
 }
@@ -280,7 +280,7 @@ int battleshipGame::convertToGameboardIndex(Coordinate coord)
 
 void battleshipGame::updateHitsAndMisses(int index, bool isHit)
 {
-    hitsAndMisses[index] = isHit ? '0' : 'X';
+    hitsAndMisses.at(index) = isHit ? '0' : 'X';
 }
 
 void battleshipGame::updateShipCount(int index)

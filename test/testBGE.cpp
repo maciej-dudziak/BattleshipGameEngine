@@ -26,7 +26,7 @@ SCENARIO("battleshipGameEngine::shoot(row, column) should target represented cel
     {
         WHEN("battleshipGameEngine::shoot() method is called with target row and column arguments")
         {
-            auto res = gameEngine.shoot(1, 1);
+            auto res = gameEngine.shoot(2, 3);
             THEN("Information about miss is returned")
             {
                 REQUIRE_FALSE(res.getIsHit());
@@ -44,7 +44,7 @@ SCENARIO("battleshipGameEngine::shoot(row, column) should target represented cel
             THEN("Hits/misses array is returned")
             {
                 auto hitsAndMisses = res.getHitsAnsMissesVector();
-                REQUIRE('X' == hitsAndMisses[0]);
+                REQUIRE('X' == hitsAndMisses[10]);
                 REQUIRE(' ' == hitsAndMisses[5]);
             }
         }

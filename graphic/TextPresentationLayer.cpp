@@ -29,12 +29,12 @@ std::string TextPresentationLayer::getTextPresentation(std::vector<char> inputDa
     int gameboardLen = sqrt(inputData.size());
     output.append(addGameboardHeader(gameboardLen));
 
-    for(int i = 1; i < gameboardLen+1; i++)
+    for(int i = 0; i < gameboardLen; i++)
     {
-        output.append("\n").append(std::to_string(i));
+        output.append("\n").append(std::to_string(i+1));
         for(int j = 0; j < gameboardLen; j++)
         {
-            output.append(" ").append(1, inputData.at(i*j + j));
+            output.append(1, inputData.at(i*gameboardLen + j)).append("&");
         }
     }
     return output;
