@@ -19,4 +19,5 @@ private:
     void parseStartResponse(std::string response);
     int parseBoardsizeArgument(std::string response);
     Coordinate parseShootInput(std::string inputCoordinates);
+    bool areStatsRequested(std::string userInput);
 };

@@ -37,15 +37,26 @@ bool TextPresentationController::promptUserToShoot()
 
     std::string userInput;
     std::getline(std::cin, userInput);
-    Coordinate target = parseShootInput(userInput);
 
-    shootResultDTO shootResult = gameEngine.shoot(target.getRow(), target.getColumn());
-
-    std::cout << std::endl << textPresentationLayer.getHitOrMissMessage(shootResult.getIsHit());
-    std::cout << textPresentationLayer.getTextPresentation(shootResult.getHitsAnsMissesVector());
-    if(shootResult.getShipsLeftCount() == 0)
+    if(areStatsRequested(userInput))
     {
-        isShootFinal = true;
+        std::cout << gameEngine.gameStats().to_string();
+        return false;
+    }
+    try {
+        Coordinate target = parseShootInput(userInput);
+
+        shootResultDTO shootResult = gameEngine.shoot(target.getRow(), target.getColumn());
+
+        std::cout << std::endl << textPresentationLayer.getHitOrMissMessage(shootResult.getIsHit());
+        std::cout << textPresentationLayer.getTextPresentation(shootResult.getHitsAnsMissesVector());
+        if(shootResult.getShipsLeftCount() == 0)
+        {
+            isShootFinal = true;
+        }
+    } catch (std::invalid_argument)
+    {
+        std::cout << "Invalid coordinates! Please follow strictly given format\n";
     }
     return isShootFinal;
 }
@@ -86,4 +97,9 @@ Coordinate TextPresentationController::parseShootInput(std::string userInput)
     int column = std::stoi(columnValue);
 
     return Coordinate::builder().withRow(row).withColumn(column).build();
+}
+
+bool TextPresentationController::areStatsRequested(std::string userInput)
+{
+    return userInput.starts_with("stats");
 }

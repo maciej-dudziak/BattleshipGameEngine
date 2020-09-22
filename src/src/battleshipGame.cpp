@@ -42,11 +42,23 @@ void battleshipGame::placeAllShips()
 
 bool battleshipGame::isShipHit(Coordinate coord)
 {
+    if(!validateCoord(coord))
+    {
+        return false;
+    }
     int gameboardIndex = convertToGameboardIndex(coord);
     bool result = gameboard[gameboardIndex];
 
     updateGameStatus(gameboardIndex, result);
+    updateGameStats(result);
     return result;
+}
+
+void battleshipGame::updateGameStats(bool shootResult)
+{
+    gameStats.addPlayedTurn();
+    if(shootResult) gameStats.addHit();
+    else gameStats.addMiss();
 }
 
 void battleshipGame::updateGameStatus(int index, bool isHit)
@@ -297,4 +309,9 @@ void battleshipGame::updateShipCount(int index)
             }
         }
     }
+}
+
+bool const battleshipGame::validateCoord(Coordinate coord)
+{
+    return (coord.getRow() > 0 && coord.getRow() < (boardsize+1) && coord.getColumn() > 0 && coord.getColumn() < (boardsize+1));
 }

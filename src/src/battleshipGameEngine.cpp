@@ -36,3 +36,8 @@ shootResultDTO battleshipGameEngine::shoot(int const row, int const column)
 
     return result;
 }
+
+GameStats battleshipGameEngine::gameStats()
+{
+    return game.getGameStats();
+}
