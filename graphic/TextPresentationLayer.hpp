@@ -10,7 +10,14 @@ public:
     std::string const WELCOME_MESSAGE = 
         "Welcome to the Battleship Game Engine.\n";
     std::string const START_INSTRUCTION_MESSAGE = 
-        "Type:\nstart           - to start new 8x8 game\nstart <int n>   - to start new nxn game with n>5\nstats           - at any point in the game to see game statistics\nexit            - to exit the application\n";
+        "Type:\n"
+        "start                or\n"
+        "start single       - to start new 8x8 single game\n"
+        "start duo          - to start new 8x8 two players game\n"
+        "start <int n>      - to start new nxn single game with n>5\n"
+        "start <int n> duo  - to start new nxn two players game with n>5\n"
+        "stats              - at any point in the game to see game statistics\n"
+        "exit               - to exit the application\n";
     std::string const GAME_START_MESSAGE = 
         "New game started - there are three ships:\nBATTLESHIP(4sq), CRUISER(3sq), DESTROYER(2sq)\n";
     std::string const ENTER_COORDINATES_MESSAGE = 
@@ -26,9 +33,10 @@ public:
 
     TextPresentationLayer();
     ~TextPresentationLayer();
-    std::string getTextPresentation(int gameboardSize);
+    std::string getTextPresentation(int gameboardSize, bool twoPlayers);
     std::string getTextPresentation(std::vector<char> inputData);
     std::string getHitOrMissMessage(bool isHit);
+    std::string getTurnMessage(int playerNumber);
 private:
     std::string addGameboardHeader(int gameboardLen);
 };

@@ -242,7 +242,7 @@ void battleshipGame::setRestrictedDownwards(int start, int len)
     bool isLeftBorder = start%boardsize == 0;
     bool isRightBorder = start%boardsize == (boardsize-1);
     bool isTopBorder = start/boardsize == 0;
-    bool isBottomBorder = (start+len*boardsize) > 63;
+    bool isBottomBorder = (start+len*boardsize) > (boardsize*boardsize - 1);
 
     if (!isLeftBorder)
     {

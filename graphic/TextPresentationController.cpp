@@ -13,13 +13,10 @@ TextPresentationController::~TextPresentationController()
 2) 
 */
 
-bool TextPresentationController::promptUserToStartAGame()
+bool TextPresentationController::carryStartGameSequence()
 {
-    std::cout << textPresentationLayer.START_INSTRUCTION_MESSAGE;
     bool isGameStarted = false;
-
-    std::string response;
-    std::getline(std::cin, response);
+    std::string response = promptUserToStartGame();
     if(isStartRequested(response))
     {
         std::cout << textPresentationLayer.BORDER;
@@ -29,43 +26,29 @@ bool TextPresentationController::promptUserToStartAGame()
     return isGameStarted;
 }
 
-bool TextPresentationController::promptUserToShoot()
+bool TextPresentationController::carryTurnSequence()
 {
-    std::cout << std::endl << textPresentationLayer.ENTER_COORDINATES_MESSAGE;
-    bool isShootFinal = false;
-
-    std::string userInput;
-    std::getline(std::cin, userInput);
+    bool gameEnd = false;
+    std::cout << std::endl << textPresentationLayer.BORDER;
+    std::cout << textPresentationLayer.getTurnMessage(gameEngine.getCurrentTurn());
+    std::string userInput = promptUserToEnterCoordinates();
 
     if(areStatsRequested(userInput))
     {
         std::cout << gameEngine.gameStats().to_string();
-        return false;
     }
-    try {
-        Coordinate target = parseShootInput(userInput);
-
-        shootResultDTO shootResult = gameEngine.shoot(target.getRow(), target.getColumn());
-
-        std::cout << std::endl << textPresentationLayer.getHitOrMissMessage(shootResult.getIsHit());
-        std::cout << textPresentationLayer.getTextPresentation(shootResult.getHitsAnsMissesVector());
-        if(shootResult.getShipsLeftCount() == 0)
-        {
-            isShootFinal = true;
-        }
-    } catch (std::invalid_argument)
+    else
     {
-        std::cout << "Invalid coordinates! Please follow strictly given format\n";
+        gameEnd = carryShootSequence(userInput);
     }
-    return isShootFinal;
+    return gameEnd;
 }
 
 bool TextPresentationController::parseStartResponse(std::string startResponse)
 {
-    std::istringstream iss(startResponse);
-    std::vector<std::string> commandWords {std::istream_iterator<std::string>(iss), {}};
+    auto commandWords = splitIntoWords(startResponse);
     std::vector<bool> gameboard;
-
+    bool duoGame = false;
     if(commandWords.size() == 1)
     {
         gameboard = gameEngine.startGame();
@@ -76,6 +59,7 @@ bool TextPresentationController::parseStartResponse(std::string startResponse)
         {
             bool isDuoGameRequested = parseGamemodeArgument(commandWords.at(1));
             gameboard = gameEngine.startGame(isDuoGameRequested);
+            duoGame = isDuoGameRequested;
         }
         else
         {        
@@ -83,13 +67,47 @@ bool TextPresentationController::parseStartResponse(std::string startResponse)
             gameboard = gameEngine.startGame(boardsizeArgument);
         }
     }
-    std::cout << textPresentationLayer.getTextPresentation(gameboard.size());
+    else if(commandWords.size() == 3)
+    {
+        bool isDuoGameRequested = parseGamemodeArgument(commandWords.at(1));
+        int boardsizeArgument = parseBoardsizeArgument(commandWords.at(2));
+        gameboard = gameEngine.startGame(isDuoGameRequested, boardsizeArgument);
+        duoGame = isDuoGameRequested;
+    }
+    std::cout << textPresentationLayer.getTextPresentation(gameboard.size(), duoGame);
     return true;
 }
 
 int TextPresentationController::parseBoardsizeArgument(std::string argument)
 {
     return std::stoi(argument);
+}
+
+bool TextPresentationController::carryShootSequence(std::string inputCoordinates)
+{
+    auto commandWords = splitIntoWords(inputCoordinates);
+    bool allShipsDestroyed = false;
+    
+    int playerNumber;
+    int row;
+    int column;
+    try {
+        playerNumber = parsePlayerNumber(commandWords);
+        if(commandWords.size() < 2) throw std::invalid_argument("not enough arguments");
+        row = std::stoi(commandWords.at(0));
+        column = std::stoi(commandWords.at(1));
+    } catch (std::invalid_argument& e) {
+            std::cout << "Invalid input: " << e.what() << "! Please follow strictly given format\n";
+            return allShipsDestroyed;
+    }
+    shootResultDTO shootResult = gameEngine.shoot(row, column, playerNumber);
+
+    std::cout << textPresentationLayer.BORDER;
+    std::cout << textPresentationLayer.getHitOrMissMessage(shootResult.getIsHit());
+    std::cout << textPresentationLayer.getTextPresentation(shootResult.getHitsAnsMissesVector());
+        
+    allShipsDestroyed = (0 == shootResult.getShipsLeftCount());
+    return allShipsDestroyed;
 }
 
 Coordinate TextPresentationController::parseShootInput(std::string userInput)
@@ -124,4 +142,40 @@ bool TextPresentationController::isGamemodeSpecified(std::string userInput)
 bool TextPresentationController::parseGamemodeArgument(std::string userInput)
 {
     return userInput == "duo";
+}
+
+std::string TextPresentationController::promptUserToStartGame()
+{
+    std::cout << textPresentationLayer.START_INSTRUCTION_MESSAGE;
+    std::string response;
+    std::getline(std::cin, response);
+    return response;
+}
+
+std::string TextPresentationController::promptUserToEnterCoordinates()
+{
+    std::cout << textPresentationLayer.ENTER_COORDINATES_MESSAGE;
+    std::string response;
+    std::getline(std::cin, response);
+    return response;
+}
+
+std::vector<std::string> TextPresentationController::splitIntoWords(std::string input)
+{
+    std::istringstream iss(input);
+    return {std::istream_iterator<std::string>(iss), {}};
+}
+
+int TextPresentationController::parsePlayerNumber(std::vector<std::string> commandWords)
+{
+    if (commandWords.size() < 3)
+    {
+        return 1;
+    }
+    int playerNumber = std::stoi(commandWords.at(2));
+    if(playerNumber != 1 && playerNumber != 2)
+    {
+        throw std::invalid_argument("wrong player number, values allowed - 1 or 2");
+    }
+    return playerNumber;
 }

@@ -34,8 +34,8 @@ class battleshipGame
         
         void placeAllShips();
         void resizeGame(int newGameboardSize);
-        
         bool isShipHit(Coordinate targetCoord);
+
         int const getShipCount() {return ships.size();}
         std::vector<bool> const getGameboard() {return gameboard;}
         std::vector<bool> const getRestrictedFields() {return restrictedFields;}

@@ -8,7 +8,7 @@ TextPresentationLayer::~TextPresentationLayer()
 {
 }
 
-std::string TextPresentationLayer::getTextPresentation(int gameboardSize)
+std::string TextPresentationLayer::getTextPresentation(int gameboardSize, bool twoPlayers)
 {
     std::string output;
     int gameboardLen = sqrt(gameboardSize);
@@ -54,4 +54,9 @@ std::string TextPresentationLayer::addGameboardHeader(int gameboardLen)
         output.append(" ").append(std::to_string(i));
     }
     return output;
+}
+
+std::string TextPresentationLayer::getTurnMessage(int playerNumber)
+{
+    return "Current turn: Player " + std::to_string(playerNumber) + "\n";
 }
