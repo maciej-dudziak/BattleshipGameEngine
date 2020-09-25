@@ -14,6 +14,10 @@ battleshipGame::~battleshipGame()
 
 void battleshipGame::resizeGame(int newGameboardSize)
 {
+    if(newGameboardSize < 6)
+    {
+        return;
+    }
     boardsize = newGameboardSize;
     gameboard.resize(newGameboardSize*newGameboardSize, false);
     restrictedFields.resize(newGameboardSize*newGameboardSize, false);
@@ -195,41 +199,41 @@ void battleshipGame::setRestrictedRightwards(int start, int len)
 
     if (!isLeftBorder)
     {
-        restrictedFields[start-1] = true;
+        restrictedFields.at(start-1) = true;
     }
     if (!isRightBorder)
     {
-        restrictedFields[start+1] = true;
+        restrictedFields.at(start+1) = true;
     }
     if (!isTopBorder)
     {
         for (int i = 0; i < len; i++)
         {
-            restrictedFields[start-boardsize+i] = true;
+            restrictedFields.at(start-boardsize+i) = true;
         }
     }
     if (!isBottomBorder)
     {
         for (int i = 0; i < len; i++)
         {
-            restrictedFields[start+boardsize+i] = true;
+            restrictedFields.at(start+boardsize+i) = true;
         }
     }
     if (!(isLeftBorder && isTopBorder))
     {
-        restrictedFields[start-boardsize-1] = true;
+        restrictedFields.at(start-boardsize-1) = true;
     }
     if (!(isRightBorder && isTopBorder))
     {
-        restrictedFields[start-boardsize+len] = true;
+        restrictedFields.at(start-boardsize+len) = true;
     }
     if (!(isLeftBorder && isBottomBorder))
     {
-        restrictedFields[start+boardsize-1] = true;
+        restrictedFields.at(start+boardsize-1) = true;
     }
     if (!(isRightBorder && isBottomBorder))
     {
-        restrictedFields[start+boardsize+len] = true;
+        restrictedFields.at(start+boardsize+len) = true;
     }
 }
 
@@ -245,7 +249,7 @@ void battleshipGame::setRestrictedDownwards(int start, int len)
         for (int i = 0; i < len; i++)
         {
             int offset = i*boardsize - 1;
-            restrictedFields[start + offset] = true;
+            restrictedFields.at(start + offset) = true;
         }
     }
     if (!isRightBorder)
@@ -253,35 +257,35 @@ void battleshipGame::setRestrictedDownwards(int start, int len)
         for (int i = 0; i < len; i++)
         {
             int offset = i*boardsize + 1;
-            restrictedFields[start + offset] = true;
+            restrictedFields.at(start + offset) = true;
         }
     }
     if (!isTopBorder)
     {
-        restrictedFields[start-boardsize] = true;
+        restrictedFields.at(start-boardsize) = true;
     }
     if (!isBottomBorder)
     {
         int offset = boardsize*len;
-        restrictedFields[start+offset] = true;
+        restrictedFields.at(start+offset) = true;
     }
     if (!(isLeftBorder && isTopBorder))
     {
-        restrictedFields[start-boardsize-1] = true;
+        restrictedFields.at(start-boardsize-1) = true;
     }
     if (!(isRightBorder && isTopBorder))
     {
-        restrictedFields[start-boardsize+1] = true;
+        restrictedFields.at(start-boardsize+1) = true;
     }
     if (!(isLeftBorder && isBottomBorder))
     {
         int offset = len*boardsize - 1;
-        restrictedFields[start+offset] = true;
+        restrictedFields.at(start+offset) = true;
     }
     if (!(isRightBorder && isBottomBorder))
     {
         int offset = len*boardsize + 1;
-        restrictedFields[start+offset] = true;
+        restrictedFields.at(start+offset) = true;
     }
 }
 

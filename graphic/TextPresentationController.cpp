@@ -20,20 +20,19 @@ bool TextPresentationController::promptUserToStartAGame()
 
     std::string response;
     std::getline(std::cin, response);
-    if(response.starts_with("start"))
+    if(isStartRequested(response))
     {
         std::cout << textPresentationLayer.BORDER;
         std::cout << textPresentationLayer.GAME_START_MESSAGE;
-        parseStartResponse(response);
-        isGameStarted = true;
+        isGameStarted = parseStartResponse(response);
     }
     return isGameStarted;
 }
 
 bool TextPresentationController::promptUserToShoot()
 {
-    bool isShootFinal = false;
     std::cout << std::endl << textPresentationLayer.ENTER_COORDINATES_MESSAGE;
+    bool isShootFinal = false;
 
     std::string userInput;
     std::getline(std::cin, userInput);
@@ -61,28 +60,36 @@ bool TextPresentationController::promptUserToShoot()
     return isShootFinal;
 }
 
-void TextPresentationController::parseStartResponse(std::string startResponse)
+bool TextPresentationController::parseStartResponse(std::string startResponse)
 {
-    if(startResponse == "start")
+    std::istringstream iss(startResponse);
+    std::vector<std::string> commandWords {std::istream_iterator<std::string>(iss), {}};
+    std::vector<bool> gameboard;
+
+    if(commandWords.size() == 1)
     {
-        auto gamboard = gameEngine.startGame();
-        std::cout << textPresentationLayer.getTextPresentation(gamboard.size());
+        gameboard = gameEngine.startGame();
     }
-    else
+    else if(commandWords.size() == 2)
     {
-        int boardsizeArgument = parseBoardsizeArgument(startResponse);
-        auto gameboard = gameEngine.startGame(boardsizeArgument);
-        std::cout << textPresentationLayer.getTextPresentation(gameboard.size());
+        if(isGamemodeSpecified(commandWords.at(1)))
+        {
+            bool isDuoGameRequested = parseGamemodeArgument(commandWords.at(1));
+            gameboard = gameEngine.startGame(isDuoGameRequested);
+        }
+        else
+        {        
+            int boardsizeArgument = parseBoardsizeArgument(commandWords.at(1));
+            gameboard = gameEngine.startGame(boardsizeArgument);
+        }
     }
-    return;
+    std::cout << textPresentationLayer.getTextPresentation(gameboard.size());
+    return true;
 }
 
-int TextPresentationController::parseBoardsizeArgument(std::string response)
+int TextPresentationController::parseBoardsizeArgument(std::string argument)
 {
-    auto delimiter = std::find(begin(response), end(response), ' ');
-    int delimiterIndex = std::distance(begin(response), delimiter);
-    std::string boardsizeArgument = response.substr(delimiterIndex++, std::string::npos);
-    return std::stoi(boardsizeArgument);
+    return std::stoi(argument);
 }
 
 Coordinate TextPresentationController::parseShootInput(std::string userInput)
@@ -102,4 +109,19 @@ Coordinate TextPresentationController::parseShootInput(std::string userInput)
 bool TextPresentationController::areStatsRequested(std::string userInput)
 {
     return userInput.starts_with("stats");
+}
+
+bool TextPresentationController::isStartRequested(std::string userInput)
+{
+    return userInput.starts_with("start");
+}
+
+bool TextPresentationController::isGamemodeSpecified(std::string userInput)
+{
+    return userInput == "single" || userInput == "duo";
+}
+
+bool TextPresentationController::parseGamemodeArgument(std::string userInput)
+{
+    return userInput == "duo";
 }

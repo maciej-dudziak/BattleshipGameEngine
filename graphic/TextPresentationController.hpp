@@ -1,6 +1,7 @@
 #include "TextPresentationLayer.hpp"
 #include "../src/battleshipGameEngine.hpp"
 #include <iostream>
+#include <sstream>
 
 class TextPresentationController
 {
@@ -16,8 +17,12 @@ public:
     bool promptUserToStartAGame();
     bool promptUserToShoot();
 private:
-    void parseStartResponse(std::string response);
-    int parseBoardsizeArgument(std::string response);
+    bool parseStartResponse(std::string userInput);
+    bool parseGamemodeArgument(std::string userInput);
+    int parseBoardsizeArgument(std::string userInput);
     Coordinate parseShootInput(std::string inputCoordinates);
+
     bool areStatsRequested(std::string userInput);
+    bool isStartRequested(std::string userInput);
+    bool isGamemodeSpecified(std::string userInput);
 };

@@ -10,7 +10,7 @@ public:
     std::string const WELCOME_MESSAGE = 
         "Welcome to the Battleship Game Engine.\n";
     std::string const START_INSTRUCTION_MESSAGE = 
-        "Type:\nstart           - to start new 8x8 game\nstart <int n>   - to start new nxn game\nstats           - at any point in the game to see game statistics\nexit            - to exit the application\n";
+        "Type:\nstart           - to start new 8x8 game\nstart <int n>   - to start new nxn game with n>5\nstats           - at any point in the game to see game statistics\nexit            - to exit the application\n";
     std::string const GAME_START_MESSAGE = 
         "New game started - there are three ships:\nBATTLESHIP(4sq), CRUISER(3sq), DESTROYER(2sq)\n";
     std::string const ENTER_COORDINATES_MESSAGE = 

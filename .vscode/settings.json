@@ -73,6 +73,5 @@
         "xutility": "cpp",
         "resumable": "cpp",
         "compare": "cpp"
-    },
-    "C_Cpp.errorSquiggles": "Disabled"
+    }
 }
