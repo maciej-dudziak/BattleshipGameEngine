@@ -51,7 +51,7 @@ bool battleshipGame::isShipHit(Coordinate coord)
         return false;
     }
     int gameboardIndex = convertToGameboardIndex(coord);
-    bool result = gameboard[gameboardIndex];
+    bool result = gameboard.at(gameboardIndex);
 
     updateGameStatus(gameboardIndex, result);
     updateGameStats(result);
@@ -203,7 +203,7 @@ void battleshipGame::setRestrictedRightwards(int start, int len)
     }
     if (!isRightBorder)
     {
-        restrictedFields.at(start+1) = true;
+        restrictedFields.at(start+len) = true;
     }
     if (!isTopBorder)
     {
@@ -219,19 +219,19 @@ void battleshipGame::setRestrictedRightwards(int start, int len)
             restrictedFields.at(start+boardsize+i) = true;
         }
     }
-    if (!(isLeftBorder && isTopBorder))
+    if (!(isLeftBorder || isTopBorder))
     {
         restrictedFields.at(start-boardsize-1) = true;
     }
-    if (!(isRightBorder && isTopBorder))
+    if (!(isRightBorder || isTopBorder))
     {
         restrictedFields.at(start-boardsize+len) = true;
     }
-    if (!(isLeftBorder && isBottomBorder))
+    if (!(isLeftBorder || isBottomBorder))
     {
         restrictedFields.at(start+boardsize-1) = true;
     }
-    if (!(isRightBorder && isBottomBorder))
+    if (!(isRightBorder || isBottomBorder))
     {
         restrictedFields.at(start+boardsize+len) = true;
     }
@@ -269,20 +269,20 @@ void battleshipGame::setRestrictedDownwards(int start, int len)
         int offset = boardsize*len;
         restrictedFields.at(start+offset) = true;
     }
-    if (!(isLeftBorder && isTopBorder))
+    if (!(isLeftBorder || isTopBorder))
     {
         restrictedFields.at(start-boardsize-1) = true;
     }
-    if (!(isRightBorder && isTopBorder))
+    if (!(isRightBorder || isTopBorder))
     {
         restrictedFields.at(start-boardsize+1) = true;
     }
-    if (!(isLeftBorder && isBottomBorder))
+    if (!(isLeftBorder || isBottomBorder))
     {
         int offset = len*boardsize - 1;
         restrictedFields.at(start+offset) = true;
     }
-    if (!(isRightBorder && isBottomBorder))
+    if (!(isRightBorder || isBottomBorder))
     {
         int offset = len*boardsize + 1;
         restrictedFields.at(start+offset) = true;
