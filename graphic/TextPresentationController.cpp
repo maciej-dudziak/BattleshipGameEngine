@@ -168,6 +168,9 @@ std::string TextPresentationController::promptUserToStartGame()
 std::string TextPresentationController::promptUserToEnterCoordinates()
 {
     std::cout << textPresentationLayer.ENTER_COORDINATES_MESSAGE;
+    if(gameEngine.getGameType() == GameType::Duo) std::cout << textPresentationLayer.PLAYER_NUMBER_MESSAGE;
+    std::cout << std::endl;
+    
     std::string response;
     std::getline(std::cin, response);
     return response;
@@ -181,9 +184,13 @@ std::vector<std::string> TextPresentationController::splitIntoWords(std::string 
 
 int TextPresentationController::parsePlayerNumber(std::vector<std::string> commandWords)
 {
-    if (gameEngine.getGameType() == GameType::Single || commandWords.size() < 3)
+    if(gameEngine.getGameType() == GameType::Single)
     {
         return 1;
+    }
+    if(commandWords.size() < 3)
+    {
+        throw std::invalid_argument("not enough arguments");
     }
     int playerNumber = std::stoi(commandWords.at(2));
     if(playerNumber != 1 && playerNumber != 2)

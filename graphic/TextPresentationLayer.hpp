@@ -22,7 +22,9 @@ public:
     std::string const GAME_START_MESSAGE = 
         "New game started - there are three ships:\nBATTLESHIP(4sq), CRUISER(3sq), DESTROYER(2sq)\n";
     std::string const ENTER_COORDINATES_MESSAGE = 
-        "Enter target coordinates for the shot in the format:\n<row number> <column number>\n";
+        "Enter target coordinates for the shot in the format:\n<row number> <column number>";
+    std::string const PLAYER_NUMBER_MESSAGE = 
+        " <player number (1 or 2)>";
     std::string const CONGRATULATIONS_MESSAGE =
         "Congratulations, you sunked the last ship!!!\n";
     std::string const PLAY_AGAIN_MASSAGE = 
