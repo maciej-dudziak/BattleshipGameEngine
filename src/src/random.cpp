@@ -1,21 +1,14 @@
 #include "../random.hpp"
-#include <time.h>
-#include <stdlib.h>
+#include <chrono>
 
-thread_local std::mt19937 gen(std::random_device{} ());
+unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+thread_local std::mt19937 gen(seed);
 
 RandomEngine::RandomEngine()
 {
-    initialiseSeed();
 }
 
 int const RandomEngine::getRandomInt(int const min, int const max)
 {
     return std::uniform_int_distribution{min, max} (gen);
-}
-
-void RandomEngine::initialiseSeed()
-{
-    srand(time(NULL));
-    gen.seed(rand());
 }

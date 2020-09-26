@@ -25,8 +25,8 @@ class battleshipGame
         std::vector<char> hitsAndMisses;
         std::vector<Ship> ships;
 
-        RandomEngine randomEngine = RandomEngine();
-        GameStats gameStats = GameStats();
+        RandomEngine randomEngine;
+        GameStats gameStats;
 
     public:
         battleshipGame();
@@ -41,6 +41,7 @@ class battleshipGame
         int const getShipCount() {return ships.size();}
         std::vector<bool> const getGameboard() {return gameboard;}
         std::vector<char> const getHitsAndMisses() {return hitsAndMisses;}
+        std::vector<bool> const getRestrictedFields() { return restrictedFields; }
         GameStats const getGameStats() { return gameStats; }
     
     private:
