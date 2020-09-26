@@ -8,6 +8,14 @@ battleshipGame::battleshipGame()
     hitsAndMisses = std::vector<char>(boardsize*boardsize, ' ');
 }
 
+battleshipGame::battleshipGame(int _boardsize)
+{
+    boardsize = _boardsize;
+    gameboard = std::vector<bool>(boardsize*boardsize, false);
+    restrictedFields = std::vector<bool>(boardsize*boardsize, false);
+    hitsAndMisses = std::vector<char>(boardsize*boardsize, ' ');
+}
+
 battleshipGame::~battleshipGame()
 {
 }
@@ -318,4 +326,14 @@ void battleshipGame::updateShipCount(int index)
 bool const battleshipGame::validateCoord(Coordinate coord)
 {
     return (coord.getRow() > 0 && coord.getRow() < (boardsize+1) && coord.getColumn() > 0 && coord.getColumn() < (boardsize+1));
+}
+
+bool const  battleshipGame::canBeShoot(Coordinate targetCoord)
+{
+    if(!validateCoord(targetCoord))
+    {
+        return false;
+    }
+    int gameboardIndex = convertToGameboardIndex(targetCoord);
+    return hitsAndMisses.at(gameboardIndex) == ' ';
 }

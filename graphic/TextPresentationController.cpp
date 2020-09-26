@@ -100,8 +100,8 @@ bool TextPresentationController::carryShootSequence(std::string inputCoordinates
     int row;
     int column;
     try {
-        playerNumber = parsePlayerNumber(commandWords);
         if(commandWords.size() < 2) throw std::invalid_argument(" ");
+        playerNumber = parsePlayerNumber(commandWords);
         row = std::stoi(commandWords.at(0));
         column = std::stoi(commandWords.at(1));
     } catch (std::invalid_argument& e) {
@@ -181,7 +181,7 @@ std::vector<std::string> TextPresentationController::splitIntoWords(std::string 
 
 int TextPresentationController::parsePlayerNumber(std::vector<std::string> commandWords)
 {
-    if (commandWords.size() < 3)
+    if (gameEngine.getGameType() == GameType::Single || commandWords.size() < 3)
     {
         return 1;
     }

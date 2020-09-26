@@ -32,9 +32,17 @@ std::string TextPresentationLayer::getTextPresentation(std::vector<char> inputDa
     for(int i = 0; i < gameboardLen; i++)
     {
         output.append("\n").append(std::to_string(i+1));
+        if(i<10)
+        {
+            output.append(" ");
+        }
         for(int j = 0; j < gameboardLen; j++)
         {
             output.append(1, inputData.at(i*gameboardLen + j)).append(" ");
+            if(j>9)
+            {
+                output.append(" ");
+            }
         }
     }
     return output;
@@ -48,7 +56,7 @@ std::string TextPresentationLayer::getResultMessage(bool isHit, int playerNumber
 
 std::string TextPresentationLayer::addGameboardHeader(int gameboardLen)
 {
-    std::string output;
+    std::string output(" ");
     for(int i = 1; i < gameboardLen+1; i++)
     {
         output.append(" ").append(std::to_string(i));

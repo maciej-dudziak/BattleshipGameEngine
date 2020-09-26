@@ -15,7 +15,7 @@ public:
         "start single       - to start new 8x8 single game\n"
         "start duo          - to start new 8x8 two players game\n"
         "start <int n>      - to start new nxn single game with n>5\n"
-        "start <int n> duo  - to start new nxn two players game with n>5\n"
+        "start duo <int n>  - to start new nxn two players game with n>5\n"
         "stats              - at any point in the game to see game statistics\n"
         "resign             - to end the ongoing game\n"
         "exit               - to exit the application\n";

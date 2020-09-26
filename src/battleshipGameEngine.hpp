@@ -28,6 +28,9 @@ public:
     shootResultDTO shoot(int row, int column, int playerNumber);
     GameStats gameStats();
     int getCurrentTurn() { return turn; }
+    GameType getGameType() { return gameType; }
 private:
     shootResultDTO prepareResultObject(bool isHit, int playerNumber);
+    void resetGames();
+    int changeTurn(int previousTurn);
 };
