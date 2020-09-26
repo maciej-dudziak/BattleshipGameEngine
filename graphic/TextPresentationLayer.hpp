@@ -17,6 +17,7 @@ public:
         "start <int n>      - to start new nxn single game with n>5\n"
         "start <int n> duo  - to start new nxn two players game with n>5\n"
         "stats              - at any point in the game to see game statistics\n"
+        "resign             - to end the ongoing game\n"
         "exit               - to exit the application\n";
     std::string const GAME_START_MESSAGE = 
         "New game started - there are three ships:\nBATTLESHIP(4sq), CRUISER(3sq), DESTROYER(2sq)\n";
@@ -35,7 +36,7 @@ public:
     ~TextPresentationLayer();
     std::string getTextPresentation(int gameboardSize, bool twoPlayers);
     std::string getTextPresentation(std::vector<char> inputData);
-    std::string getHitOrMissMessage(bool isHit);
+    std::string getResultMessage(bool isHit, int playerNumber);
     std::string getTurnMessage(int playerNumber);
 private:
     std::string addGameboardHeader(int gameboardLen);

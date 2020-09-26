@@ -11,7 +11,6 @@ int main()
         while(!controller.carryTurnSequence())
         {
         }
-        std::cout << std::endl << controller.getCongratulationsMessage();
         startGame = controller.carryStartGameSequence();
     }
     return 0;

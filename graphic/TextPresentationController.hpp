@@ -28,6 +28,7 @@ private:
     bool areStatsRequested(std::string userInput);
     bool isStartRequested(std::string userInput);
     bool isGamemodeSpecified(std::string userInput);
+    bool isResignRequested(std::string userInput);
 
     std::string promptUserToStartGame();
     std::string promptUserToEnterCoordinates();

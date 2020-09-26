@@ -37,9 +37,17 @@ bool TextPresentationController::carryTurnSequence()
     {
         std::cout << gameEngine.gameStats().to_string();
     }
+    else if(isResignRequested(userInput))
+    {
+        return true;
+    }
     else
     {
         gameEnd = carryShootSequence(userInput);
+    }
+    if(gameEnd)
+    {
+        std::cout << std::endl << getCongratulationsMessage();
     }
     return gameEnd;
 }
@@ -93,17 +101,17 @@ bool TextPresentationController::carryShootSequence(std::string inputCoordinates
     int column;
     try {
         playerNumber = parsePlayerNumber(commandWords);
-        if(commandWords.size() < 2) throw std::invalid_argument("not enough arguments");
+        if(commandWords.size() < 2) throw std::invalid_argument(" ");
         row = std::stoi(commandWords.at(0));
         column = std::stoi(commandWords.at(1));
     } catch (std::invalid_argument& e) {
-            std::cout << "Invalid input: " << e.what() << "! Please follow strictly given format\n";
+            std::cout << "Invalid input! Please follow strictly given commands and format.\n";
             return allShipsDestroyed;
     }
     shootResultDTO shootResult = gameEngine.shoot(row, column, playerNumber);
 
     std::cout << textPresentationLayer.BORDER;
-    std::cout << textPresentationLayer.getHitOrMissMessage(shootResult.getIsHit());
+    std::cout << textPresentationLayer.getResultMessage(shootResult.getIsHit(), playerNumber);
     std::cout << textPresentationLayer.getTextPresentation(shootResult.getHitsAnsMissesVector());
         
     allShipsDestroyed = (0 == shootResult.getShipsLeftCount());
@@ -127,6 +135,11 @@ Coordinate TextPresentationController::parseShootInput(std::string userInput)
 bool TextPresentationController::areStatsRequested(std::string userInput)
 {
     return userInput.starts_with("stats");
+}
+
+bool TextPresentationController::isResignRequested(std::string userInput)
+{
+    return userInput.starts_with("resign");
 }
 
 bool TextPresentationController::isStartRequested(std::string userInput)

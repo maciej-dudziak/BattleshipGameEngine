@@ -40,10 +40,10 @@ std::string TextPresentationLayer::getTextPresentation(std::vector<char> inputDa
     return output;
 }
 
-std::string TextPresentationLayer::getHitOrMissMessage(bool isHit)
+std::string TextPresentationLayer::getResultMessage(bool isHit, int playerNumber)
 {
     std::string result = isHit ? "Hit" : "Miss";
-    return "Shot result: " + result + "\n";
+    return "Move played by Player " + std::to_string(playerNumber) + ". Shoot Result: " + result + "\n";
 }
 
 std::string TextPresentationLayer::addGameboardHeader(int gameboardLen)
