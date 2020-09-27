@@ -27,6 +27,7 @@ public:
     shootResultDTO shoot(int row, int column);
     shootResultDTO shoot(int row, int column, int playerNumber);
     GameStats gameStats();
+    GameStats gameStats(int playerNumber);
     int getCurrentTurn() { return turn; }
     GameType getGameType() { return gameType; }
 private:

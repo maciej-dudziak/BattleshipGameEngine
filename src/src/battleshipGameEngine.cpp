@@ -94,7 +94,17 @@ shootResultDTO battleshipGameEngine::prepareResultObject(bool isHit, int playerN
 
 GameStats battleshipGameEngine::gameStats()
 {
-    return games.at(0).getGameStats();
+    GameStats output = games.at(0).getGameStats();
+    if(gameType == GameType::Duo)
+    {
+        output += games.at(1).getGameStats();
+    }
+    return output;
+}
+
+GameStats battleshipGameEngine::gameStats(int playerNumber)
+{
+    return games.at(playerNumber-1).getGameStats();
 }
 
 void battleshipGameEngine::resetGames()

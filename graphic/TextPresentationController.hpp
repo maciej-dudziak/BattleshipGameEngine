@@ -32,6 +32,7 @@ private:
 
     std::string promptUserToStartGame();
     std::string promptUserToEnterCoordinates();
+    std::string getRequestedStats(std::string userInput);
 
     std::vector<std::string> splitIntoWords(std::string input);   
 };

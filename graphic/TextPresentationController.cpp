@@ -32,22 +32,27 @@ bool TextPresentationController::carryTurnSequence()
     std::cout << std::endl << textPresentationLayer.BORDER;
     std::cout << textPresentationLayer.getTurnMessage(gameEngine.getCurrentTurn());
     std::string userInput = promptUserToEnterCoordinates();
-
-    if(areStatsRequested(userInput))
+    try
     {
-        std::cout << gameEngine.gameStats().to_string();
-    }
-    else if(isResignRequested(userInput))
-    {
-        return true;
-    }
-    else
-    {
-        gameEnd = carryShootSequence(userInput);
-    }
-    if(gameEnd)
-    {
-        std::cout << std::endl << getCongratulationsMessage();
+        if(areStatsRequested(userInput))
+        {
+            std::string statsResponse = getRequestedStats(userInput);
+            std::cout << statsResponse << std::endl;
+        }
+        else if(isResignRequested(userInput))
+        {
+            gameEnd = true;
+        }
+        else
+        {
+            gameEnd = carryShootSequence(userInput);
+            if(gameEnd)
+            {
+                std::cout << std::endl << getCongratulationsMessage();
+            }
+        }
+    } catch (std::invalid_argument& e) {
+            std::cout << "Invalid input! Please follow strictly given commands and format.\n";
     }
     return gameEnd;
 }
@@ -91,6 +96,22 @@ int TextPresentationController::parseBoardsizeArgument(std::string argument)
     return std::stoi(argument);
 }
 
+std::string TextPresentationController::getRequestedStats(std::string userInput)
+{
+    auto commandWords = splitIntoWords(userInput);
+    std::string output;
+    if(commandWords.size() == 1)
+    {
+        output = gameEngine.gameStats().to_string();
+    }
+    else if(commandWords.size() == 2)
+    {
+        int playerNumber = std::stoi(commandWords.at(1));
+        output = gameEngine.gameStats(playerNumber).to_string();
+    }
+    return output;
+}
+
 bool TextPresentationController::carryShootSequence(std::string inputCoordinates)
 {
     auto commandWords = splitIntoWords(inputCoordinates);
@@ -99,15 +120,12 @@ bool TextPresentationController::carryShootSequence(std::string inputCoordinates
     int playerNumber;
     int row;
     int column;
-    try {
-        if(commandWords.size() < 2) throw std::invalid_argument(" ");
-        playerNumber = parsePlayerNumber(commandWords);
-        row = std::stoi(commandWords.at(0));
-        column = std::stoi(commandWords.at(1));
-    } catch (std::invalid_argument& e) {
-            std::cout << "Invalid input! Please follow strictly given commands and format.\n";
-            return allShipsDestroyed;
-    }
+
+    if(commandWords.size() < 2) throw std::invalid_argument(" ");
+    playerNumber = parsePlayerNumber(commandWords);
+    row = std::stoi(commandWords.at(0));
+    column = std::stoi(commandWords.at(1));
+    
     shootResultDTO shootResult = gameEngine.shoot(row, column, playerNumber);
 
     std::cout << textPresentationLayer.BORDER;
