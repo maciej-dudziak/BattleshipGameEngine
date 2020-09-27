@@ -17,7 +17,7 @@ public:
         "start <int n>      - to start new nxn single game with n>5\n"
         "start duo <int n>  - to start new nxn two players game with n>5\n"
         "stats              - to see total game statistics\n"
-        "stats <1 or 2>     - to see statistics for a specified player only (in duo game only)"
+        "stats <1 or 2>     - to see statistics for a specified player only (in duo game only)\n"
         "resign             - to end the ongoing game\n"
         "exit               - to exit the application\n";
     std::string const GAME_START_MESSAGE = 
